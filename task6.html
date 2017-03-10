@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>IFE-JavaScript-Task4</title>
+	<style type="text/css">
+		#queue div{
+			height: 30px;
+			display: inline-block;
+			background: red;
+			color: #fff;
+			border-radius: 5px;
+			padding: 10px 10px;
+			margin: 10px 10px;
+		}
+	</style>
+</head>
+<body>
+	<form onSubmit="return false">
+		<textarea id="inputContent"></textarea>
+		<button id="left-in">左侧入</button>
+		<button id="right-in">右侧入</button>&nbsp;&nbsp;&nbsp;
+		<button id="left-out">左侧出</button>
+		<button id="right-out">右侧出</button>
+		<input type="text" name="queryContent" id="queryContent"/>
+		<button id="query">查询</button>
+	</form>
+	<div id="queue"></div>
+
+	<script type="text/javascript">
+		var queueData = [];
+		var inputContent = document.getElementById("inputContent");
+		var leftIn = document.getElementById("left-in");
+		var rightIn = document.getElementById("right-in");
+		var leftOut = document.getElementById("left-out");
+		var rightOut = document.getElementById("right-out");
+		var queryContent = document.getElementById("queryContent");
+		var query = document.getElementById("query");
+		var queue = document.getElementById("queue");
+
+		//封装四个按钮的功能
+		leftIn.onclick = function(){
+			var tempArray = inputContent.value.split("，");
+			//将现有数组和获取的数组连接在一起
+			queueData = queueData.concat(tempArray);
+			render();
+			inputContent.value = "";
+		}
+		rightIn.onclick = function(){
+			var tempArray = inputContent.value.split("，");
+			queueData = tempArray.concat(queueData);
+			inputContent.value = "";
+			render();
+		}
+		leftOut.onclick = function(){
+			alert(queueData.shift());
+			render();
+		}
+		rightOut.onclick = function(){
+			alert(queueData.pop());
+			render();
+		}
+		query.onclick = function(){
+			let divs = queue.getElementsByTagName("div"),
+				searchValue=queryContent.value;
+			for (let i = 0; i < queueData.length; i++) {
+				if(queueData[i].search(searchValue) >= 0){
+					divs[i].style.background = "blue";
+					queryContent.value = "";
+				}
+			}
+		}
+
+		//将数组元素加入div中
+		function render(){
+			var divArray = [];
+			for (var i = 0; i < queueData.length; i++) {
+				divArray.push("<div>" + queueData[i] + "</div>");
+			}
+				queue.innerHTML = divArray.join('');
+			var divs = queue.getElementsByTagName("div");
+			console.log(divs)
+			for (let i = 0; i < divs.length; i++) {
+				divs[i].onclick = function(){
+					queueData.splice(i,1);
+					render();
+				}
+			}
+		}
+
+	</script>
+</body>
+</html>
